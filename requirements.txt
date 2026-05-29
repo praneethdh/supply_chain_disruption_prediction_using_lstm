@@ -3,7 +3,7 @@ pandas
 numpy
 requests
 joblib
-tensorflow
+tensorflow==2.15.1
 scikit-learn
 xgboost
 fastapi

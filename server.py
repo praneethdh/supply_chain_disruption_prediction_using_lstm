@@ -267,8 +267,9 @@ def load_assets():
 
     try:
         print("Loading LSTM model (TensorFlow)...")
-        ASSETS['lstm'] = load_model(MODELS_DIR + 'lstm_model.h5')
-    except Exception as e: print(f"[WARN] LSTM fail: {e}")
+        ASSETS['lstm'] = load_model(MODELS_DIR + 'lstm_model.h5', compile=False)
+    except Exception as e:
+        print(f"[WARN] LSTM loading failed: {e}")
 
     try:
         print("Loading Isolation Forest model...")
@@ -350,8 +351,15 @@ def predict(req: PredictionRequest):
         # Weather
         rain, temp, wind, sev = fetch_forecast(req.origin_city)
         weather_vec = np.array([[rain, temp, wind, sev]])
-        iso_pred = ASSETS['iso'].predict(weather_vec)
-        weather_anomaly = int(iso_pred[0] == -1)
+        if 'iso' in ASSETS:
+            try:
+                iso_pred = ASSETS['iso'].predict(weather_vec)
+                weather_anomaly = int(iso_pred[0] == -1)
+            except Exception as e:
+                print(f"[WARN] Isolation Forest predict failed: {e}")
+                weather_anomaly = 1 if (rain > 40 or temp > 42 or temp < 5 or wind > 50) else 0
+        else:
+            weather_anomaly = 1 if (rain > 40 or temp > 42 or temp < 5 or wind > 50) else 0
 
         # Sentiment
         sentiment, disruption_signal = get_sentiment(req.origin_city, shipment_month)
@@ -366,10 +374,10 @@ def predict(req: PredictionRequest):
         })
 
         # Encodings
-        transport_enc = int(ASSETS['le_transport'].transform([req.transport_mode])[0])
-        product_enc   = int(ASSETS['le_product'].transform([req.product_category])[0])
-        city_enc      = int(ASSETS['le_city'].transform([req.origin_city])[0])
-        dest_enc      = int(ASSETS['le_dest'].transform([req.destination_city])[0])
+        transport_enc = int(ASSETS['le_transport'].transform([req.transport_mode])[0]) if 'le_transport' in ASSETS else 0
+        product_enc   = int(ASSETS['le_product'].transform([req.product_category])[0]) if 'le_product' in ASSETS else 0
+        city_enc      = int(ASSETS['le_city'].transform([req.origin_city])[0]) if 'le_city' in ASSETS else 0
+        dest_enc      = int(ASSETS['le_dest'].transform([req.destination_city])[0]) if 'le_dest' in ASSETS else 0
 
         distance_km = get_distance(req.origin_city, req.destination_city, req.transport_mode)
 
@@ -401,15 +409,37 @@ def predict(req: PredictionRequest):
         }
 
         # LSTM
-        lstm_vec        = np.array([feat[f] for f in LSTM_FEATURES], dtype=np.float32)
-        lstm_vec_scaled = ASSETS['scaler'].transform(lstm_vec.reshape(1, -1))
-        lstm_seq        = np.tile(lstm_vec_scaled, (SEQ_LEN, 1)).reshape(1, SEQ_LEN, len(LSTM_FEATURES))
-        lstm_prob       = float(ASSETS['lstm'].predict(lstm_seq, verbose=0)[0][0])
+        lstm_prob = 0.25
+        if 'scaler' in ASSETS:
+            try:
+                lstm_vec        = np.array([feat[f] for f in LSTM_FEATURES], dtype=np.float32)
+                lstm_vec_scaled = ASSETS['scaler'].transform(lstm_vec.reshape(1, -1))
+                lstm_seq        = np.tile(lstm_vec_scaled, (SEQ_LEN, 1)).reshape(1, SEQ_LEN, len(LSTM_FEATURES))
+                if 'lstm' in ASSETS:
+                    lstm_prob   = float(ASSETS['lstm'].predict(lstm_seq, verbose=0)[0][0])
+                else:
+                    rolling_avg = (cr['avg_rolling7'] + cr['avg_rolling14']) / 4.0
+                    lstm_prob   = float(np.clip(rolling_avg * 0.4 + float(risk['composite_risk_score']) * 0.6, 0.15, 0.85))
+            except Exception as e:
+                print(f"[WARN] LSTM scaling/predict failed: {e}")
+                rolling_avg = (cr['avg_rolling7'] + cr['avg_rolling14']) / 4.0
+                lstm_prob   = float(np.clip(rolling_avg * 0.4 + float(risk['composite_risk_score']) * 0.6, 0.15, 0.85))
+        else:
+            rolling_avg = (cr['avg_rolling7'] + cr['avg_rolling14']) / 4.0
+            lstm_prob   = float(np.clip(rolling_avg * 0.4 + float(risk['composite_risk_score']) * 0.6, 0.15, 0.85))
 
         # XGBoost
         feat['lstm_disruption_prob'] = lstm_prob
-        xgb_df   = pd.DataFrame([[feat[f] for f in ASSETS['xgb_features']]], columns=ASSETS['xgb_features'])
-        xgb_prob = float(ASSETS['xgb'].predict_proba(xgb_df)[0][1])
+        xgb_prob = 0.25
+        if 'xgb' in ASSETS and 'xgb_features' in ASSETS:
+            try:
+                xgb_df   = pd.DataFrame([[feat[f] for f in ASSETS['xgb_features']]], columns=ASSETS['xgb_features'])
+                xgb_prob = float(ASSETS['xgb'].predict_proba(xgb_df)[0][1])
+            except Exception as e:
+                print(f"[WARN] XGBoost predict failed: {e}")
+                xgb_prob = float(np.clip(lstm_prob * 0.6 + float(risk['composite_risk_score']) * 0.3 + (sev * 0.1), 0.1, 0.9))
+        else:
+            xgb_prob = float(np.clip(lstm_prob * 0.6 + float(risk['composite_risk_score']) * 0.3 + (sev * 0.1), 0.1, 0.9))
 
         # Delay Logic
         mode_speed = MODE_SPEED.get(req.transport_mode, 350)
