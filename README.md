@@ -12,13 +12,13 @@ pinned: false
 [![React 19](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-v0.110+-teal.svg)](https://fastapi.tiangolo.com/)
 [![Three.js](https://img.shields.io/badge/Three.js-r184-white.svg)](https://threejs.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=Streamlit&logoColor=white)](YOUR_STREAMLIT_APP_LINK_HERE)
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-yellow)](https://huggingface.co/spaces/praneeth-dh/supply-chain-disruption-prediction)
 
 An advanced, "next level" multi-model AI system designed to predict and mitigate supply chain disruptions across the Indian logistics network, featuring a high-performance 3D animated frontend.
 
 ## 🔗 Live Application Link
-🚀 **Streamlit App Demo:** [Launch Streamlit Application (Click Here)](YOUR_STREAMLIT_APP_LINK_HERE)  
-*(Note: Replace `YOUR_STREAMLIT_APP_LINK_HERE` with your deployed Streamlit URL once you have created it).*
+🚀 **Hugging Face Spaces Demo:** [Launch Full-Stack 3D Application (Click Here)](https://huggingface.co/spaces/praneeth-dh/supply-chain-disruption-prediction)  
+*(The application is fully hosted using Docker, bringing together the React 19 frontend and FastAPI backend).*
 
 ## 🚀 Architecture
 
