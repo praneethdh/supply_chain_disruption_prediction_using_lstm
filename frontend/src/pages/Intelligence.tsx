@@ -1,4 +1,3 @@
-import type { PredictionResponse } from '../types';
 import { Shield, Activity, Zap, Brain, ChevronDown } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
@@ -6,11 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface IntelligencePageProps {
-  theme?: 'dark' | 'light';
-}
-
-export const IntelligencePage = ({ theme = 'dark' }: IntelligencePageProps) => {
+export const IntelligencePage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

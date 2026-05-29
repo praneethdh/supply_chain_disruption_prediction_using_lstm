@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
-import { gsap } from 'gsap';
 import { Package, Truck, MapPin, Building2, ChevronRight, Loader2, Sparkles, BrainCircuit, Globe2 } from 'lucide-react';
 import { MapScene } from './components/MapScene';
 import { PredictionPanel } from './components/PredictionPanel';
@@ -11,7 +10,7 @@ import type { Config, PredictionResponse, PredictionRequest } from './types';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<'nexus' | 'intelligence'>('nexus');
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -232,7 +231,7 @@ function App() {
               <main className="flex-1 p-6 flex flex-col justify-center items-end relative pointer-events-none z-20">      
                 {prediction && (
                   <div className="w-[450px] prediction-content pointer-events-auto overflow-y-auto max-h-[calc(100vh-180px)] scrollbar-hide pr-2">
-                    <PredictionPanel key={prediction.disruption_probability + prediction.expected_delivery_date} prediction={prediction} transportMode={formData.transport_mode} originCity={formData.origin_city} destinationCity={formData.destination_city} />
+                    <PredictionPanel key={prediction.disruption_probability + prediction.expected_delivery_date} prediction={prediction} transportMode={formData.transport_mode} />
                   </div>
                 )}
               </main>
@@ -249,7 +248,7 @@ function App() {
 
         {/* Intelligence Page */}
         <div className={`absolute inset-0 transition-all duration-1000 ease-in-out ${currentPage === 'intelligence' ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-12 pointer-events-none'}`}>
-          <IntelligencePage theme={theme} />
+          <IntelligencePage />
         </div>
 
       </div>
