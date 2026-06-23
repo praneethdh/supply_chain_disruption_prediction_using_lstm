@@ -1,102 +1,247 @@
----
-title: Supply Chain Prediction
-emoji: 🚚
-colorFrom: blue
-colorTo: green
-sdk: docker
-pinned: false
----
+# Supply Chain Disruption Prediction System: AI-Powered Predictive Logistics Intelligence
 
-# 🚚 Supply Chain Disruption Prediction System (India)
+## About The Project
 
-[![React 19](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-v0.110+-teal.svg)](https://fastapi.tiangolo.com/)
-[![Three.js](https://img.shields.io/badge/Three.js-r184-white.svg)](https://threejs.org/)
-[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-yellow)](https://huggingface.co/spaces/praneeth-dh/supply-chain-disruption-prediction)
 
-An advanced, "next level" multi-model AI system designed to predict and mitigate supply chain disruptions across the Indian logistics network, featuring a high-performance 3D animated frontend.
+The Supply Chain Disruption Prediction System is a full-stack AI application that predicts potential disruptions in logistics and supply chain operations across India. The system combines Isolation Forest, LSTM, and XGBoost models to analyze shipment data, weather conditions, and historical patterns to estimate disruption risks.
 
-## 🔗 Live Application Link
-🚀 **Hugging Face Spaces Demo:** [Launch Full-Stack 3D Application (Click Here)](https://huggingface.co/spaces/praneeth-dh/supply-chain-disruption-prediction)  
-*(The application is fully hosted using Docker, bringing together the React 19 frontend and FastAPI backend).*
+The backend is built using FastAPI for efficient model inference and API services, while the frontend uses React 19, Three.js, and Tailwind CSS to provide an interactive 3D visualization of the supply chain network. The application also integrates real-time weather data and explainable AI insights, helping users identify risk factors and make informed logistics decisions.
+.
 
-## 🚀 Architecture
+## 🔗 Live Space Deployment
 
-This project has been upgraded from a Streamlit application to a modern **Full-Stack AI Application**:
+**Live Web Application:**
+https://huggingface.co/spaces/praneeth-dh/supply-chain-disruption-prediction
 
-- **Frontend:** Built with **React 19**, **Three.js** (via React Three Fiber), and **GSAP**. It provides a sleek, interactive 3D visualization of the supply chain network across 15 major Indian cities.
-- **Backend:** A robust **FastAPI** service that handles model inference, weather data fetching, and risk assessment.
-- **AI Models:**
-  - **Isolation Forest:** Anomaly detection for weather patterns.
-  - **LSTM (Deep Learning):** Captures temporal dependencies in disruption sequences.
-  - **XGBoost:** The final classifier for precise risk scoring.
+## Library Requirements
 
----
+### Backend
 
-## 🌟 Key Features
+* FastAPI
+* Uvicorn
+* Pandas
+* NumPy
+* Scikit-learn
+* XGBoost
+* TensorFlow / Keras
+* Requests
 
-*   **3D Interactive Globe/Map:** Stylized 3D visualization of logistics nodes with animated route arcs.
-*   **GSAP Powered Animations:** Fluid UI transitions and "next level" visual feedback.
-*   **Real-time Weather Intelligence:** Integrates live 7-day weather forecasts via Open-Meteo API.
-*   **Explainable AI:** Detailed breakdown of "Risk Causes" for every shipment prediction.
-*   **Modern UI:** Glassmorphism-inspired design using **Tailwind CSS**.
+### Frontend
 
----
+* React 19
+* Three.js
+* React Three Fiber
+* GSAP
+* Tailwind CSS
+* TypeScript
+* Axios
 
-## 🛠️ Getting Started
+## Getting Started
 
-### Prerequisites
-*   Python 3.12+
-*   Node.js 18+
-*   npm
+Follow these instructions to set up and run the project locally.
 
-### 1. Backend Setup
+## Installation Steps
+
+### Option 1: Installation from GitHub
+
+#### 1. Clone the Repository
+
 ```bash
-# Install dependencies
-pip install -r requirements.txt
+git clone https://github.com/your-username/supply-chain-disruption-prediction.git
+```
 
-# Start the FastAPI server
+#### 2. Create a Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+#### 3. Activate the Virtual Environment
+
+**Windows**
+
+```powershell
+.\venv\Scripts\activate
+```
+
+**Linux/macOS**
+
+```bash
+source venv/bin/activate
+```
+
+#### 4. Install Backend Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+#### 5. Start FastAPI Backend
+
+```bash
 python server.py
 ```
-The API will be available at `http://localhost:8000`.
 
-### 2. Frontend Setup
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
-```
-The application will be available at `http://localhost:5173`.
-
----
-
-## 📂 Project Structure
+Backend will run on:
 
 ```text
-├── frontend/             # React + Three.js + GSAP Frontend
-│   ├── src/components/   # 3D Scene and UI Panels
-│   ├── src/services/     # API Client
-│   └── src/types/        # TypeScript Definitions
-├── datasets/             # Historical shipment, news, and supplier data
-├── models/               # Saved .pkl and .h5 model files & encoders
-├── server.py             # FastAPI Backend
-├── app.py                # Legacy Streamlit Interface (Reference)
-├── requirements.txt      # Project dependencies
-└── README.md             # You are here
+http://localhost:8000
 ```
 
----
+#### 6. Setup Frontend
 
-## 📈 System Objectives
-*   **Proactive Visibility:** Move from reactive to predictive logistics.
-*   **Risk Mitigation:** Identify high-risk shipments before they leave the origin.
-*   **Optimized Planning:** Adjust buffer stocks and delivery promises based on data-driven confidence scores.
+```bash
+cd frontend
+npm install
+```
 
----
+#### 7. Start Frontend
 
-## 📄 License
-Distributed under the MIT License.
+```bash
+npm run dev
+```
+
+Frontend will run on:
+
+```text
+http://localhost:5173
+```
+
+### Option 2: Run with Docker
+
+#### Build Docker Image
+
+```bash
+docker build -t supply-chain-predictor .
+```
+
+#### Run Docker Container
+
+```bash
+docker run -p 7860:7860 supply-chain-predictor
+```
+
+## 💻 How to Use
+
+### Step 1
+
+Launch both the FastAPI backend and React frontend.
+
+### Step 2
+
+Open the application in your browser.
+
+### Step 3
+
+Explore the interactive 3D supply chain visualization representing major logistics hubs across India.
+
+### Step 4
+
+Select shipment and route information.
+
+### Step 5
+
+Allow the system to fetch real-time weather intelligence and process shipment data.
+
+### Step 6
+
+Generate disruption risk predictions using the AI ensemble pipeline.
+
+### Step 7
+
+Review risk scores, confidence metrics, and explainable AI insights for decision-making.
+
+## Key Features
+
+* AI-powered disruption prediction system
+* Isolation Forest anomaly detection
+* LSTM-based temporal forecasting
+* XGBoost risk classification
+* Real-time weather intelligence integration
+* Explainable AI insights
+* Interactive 3D logistics visualization
+* React 19 and Three.js frontend
+* FastAPI backend services
+* Docker deployment support
+* Modern responsive UI using Tailwind CSS
+
+## Project Structure
+
+```text
+├── frontend/
+│   ├── src/components/
+│   ├── src/services/
+│   ├── src/types/
+│   └── assets/
+│
+├── datasets/
+│
+├── models/
+│   ├── isolation_forest.pkl
+│   ├── xgboost_model.pkl
+│   └── lstm_model.h5
+│
+├── server.py
+├── requirements.txt
+├── Dockerfile
+└── README.md
+```
+
+## Contributing
+
+Contributions are welcome and greatly appreciated.
+
+### Report Bugs
+
+Open an issue describing the bug and reproduction steps.
+
+### Contribute Code
+
+1. Fork the repository
+2. Create a feature branch
+
+```bash
+git checkout -b feature/AmazingFeature
+```
+
+3. Commit your changes
+
+```bash
+git commit -m "Add Amazing Feature"
+```
+
+4. Push your branch
+
+```bash
+git push origin feature/AmazingFeature
+```
+
+5. Open a Pull Request
+
+### Suggestions
+
+Feature requests and improvement ideas are always welcome.
+
+If you find this project useful, please consider giving it a ⭐ on GitHub.
+
+## License
+
+This project is licensed under the MIT License.
+
+
+## Acknowledgements
+
+Special thanks to the developers and communities behind:
+
+* React
+* FastAPI
+* Three.js
+* React Three Fiber
+* GSAP
+* Tailwind CSS
+* TensorFlow
+* XGBoost
+* Scikit-learn
+* Open-Meteo API
+* Docker
+* Hugging Face Spaces
